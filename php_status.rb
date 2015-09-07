@@ -21,6 +21,17 @@ require 'uri'
 }
 
 # method
+def discovery(nginx_vhost_dir)
+  domains = []
+
+  Dir.glob(nginx_vhost_dir + "*.conf") do |conf|
+    name = get_domain_with_port(conf)
+    domains << name if name
+  end
+
+  return domains
+end
+
 def get_domain_with_port(file)
   name = port = iscgi = nil
 
@@ -45,17 +56,6 @@ def get_http(domain,path)
     }
 
     return res, port
-end
-
-def discovery(nginx_vhost_dir)
-  domains = []
-
-  Dir.glob(nginx_vhost_dir + "*.conf") do |conf|
-    name = get_domain_with_port(conf)
-    domains << name if name
-  end
-
-  return domains
 end
 
 def ping(domain, pidfile)
